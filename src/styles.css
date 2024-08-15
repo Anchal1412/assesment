@@ -1,0 +1,54 @@
+.dashboard {
+    padding: 20px;
+  }
+  
+  .category {
+    margin-bottom: 30px;
+  }
+  
+  .widgets {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .widget {
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+  }
+  
+  .add-widget-form {
+    margin-top: 30px;
+  }
+  
+  .add-widget-form input,
+  .add-widget-form textarea,
+  .add-widget-form select {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+  }
+  
+  .add-widget-form button {
+    padding: 10px 20px;
+  }
+  
+  button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  input[type="text"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+  }
+  

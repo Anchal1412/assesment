@@ -1,0 +1,50 @@
+{
+    "categories": [
+      {
+        "name": "CSPM Executive Dashboard",
+        "widgets": [
+          {
+            "id": 1,
+            "name": "Cloud Accounts",
+            "content": "2 Total\nConnected (2)\nNot Connected (2)"
+          },
+          {
+            "id": 2,
+            "name": "Cloud Account Risk Assessment",
+            "content": "9659 Total\nFailed (1689)\nWarning (681)\nNot available (36)\nPassed (7253)"
+          }
+        ]
+      },
+      {
+        "name": "CWPP Dashboard",
+        "widgets": [
+          {
+            "id": 3,
+            "name": "Top 5 Namespace Specific Alerts",
+            "content": "No Graph data available!"
+          },
+          {
+            "id": 4,
+            "name": "Workload Alerts",
+            "content": "No Graph data available!"
+          }
+        ]
+      },
+      {
+        "name": "Registry Scan",
+        "widgets": [
+          {
+            "id": 5,
+            "name": "Image Risk Assessment",
+            "content": "1470 Total Vulnerabilities\nCritical (9)\nHigh (150)\nMedium (1100)\nLow (211)"
+          },
+          {
+            "id": 6,
+            "name": "Image Security Issues",
+            "content": "2 Total Images\nCritical (2)\nHigh (2)"
+          }
+        ]
+      }
+    ]
+  }
+  
