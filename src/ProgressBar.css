@@ -1,0 +1,47 @@
+/* ProgressBar.css */
+
+.progress-bar-container {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .progress-bar-info {
+    margin-bottom: 10px;
+  }
+  
+  .total-info {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .progress-bar {
+    position: relative;
+    height: 20px; /* Adjust height as needed */
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    border-radius: 15px;
+    width: 50%;
+  }
+  
+  .progress-bar-segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    white-space: nowrap;
+    text-align: center;
+  }
+  
+  .progress-bar-labels {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  

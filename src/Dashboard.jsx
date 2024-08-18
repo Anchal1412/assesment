@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-
+import DonutChart from './DonutChart'; 
+import ProgressBar from './ProgressBar';
+import Drawer from './Drawer'; 
+import './Dashboard.css';
+import myImage from './assets/graphimage.png';
+import TopNav from './TopNav';
 const initialData = {
   categories: [
     {
       name: "CSPM Executive Dashboard",
       widgets: [
-        { id: 1, name: "Cloud Accounts", content: "2 Total\nConnected (2)\nNot Connected (2)" },
-        { id: 2, name: "Cloud Account Risk Assessment", content: "9659 Total\nFailed (1689)\nWarning (681)\nNot available (36)\nPassed (7253)" }
+        { id: 1, name: "Cloud Accounts", content: "" },
+        { id: 2, name: "Cloud Account Risk Assessment", content: "" }
       ]
     },
     {
@@ -19,8 +24,8 @@ const initialData = {
     {
       name: "Registry Scan",
       widgets: [
-        { id: 5, name: "Image Risk Assessment", content: "1470 Total Vulnerabilities\nCritical (9)\nHigh (150)\nMedium (1100)\nLow (211)" },
-        { id: 6, name: "Image Security Issues", content: "2 Total Images\nCritical (2)\nHigh (2)" }
+        { id: 5, name: "Image Risk Assessment", content: "" },
+        { id: 6, name: "Image Security Issues", content: "" }
       ]
     }
   ]
@@ -31,7 +36,8 @@ function Dashboard() {
   const [newWidget, setNewWidget] = useState({ name: '', content: '' });
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [addingWidget, setAddingWidget] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [addingWidgetCategory, setAddingWidgetCategory] = useState(null);
 
   const addWidget = () => {
     if (!selectedCategory || !newWidget.name || !newWidget.content) return;
@@ -49,20 +55,23 @@ function Dashboard() {
     });
 
     setNewWidget({ name: '', content: '' });
-    setAddingWidget(false);
+    setIsDrawerOpen(false);
+    setAddingWidgetCategory(null);
   };
 
-  const removeWidget = (categoryName, widgetId) => {
-    setData(prevData => {
-      const updatedCategories = prevData.categories.map(category => {
-        if (category.name === categoryName) {
-          category.widgets = category.widgets.filter(w => w.id !== widgetId);
-        }
-        return category;
-      });
+  const handleConfirmClick = () => {
+    addWidget();
+  };
 
-      return { ...prevData, categories: updatedCategories };
-    });
+  const handleCancelClick = () => {
+    setIsDrawerOpen(false);
+    setAddingWidgetCategory(null);
+  };
+
+  const handleAddWidgetClick = (categoryName) => {
+    setSelectedCategory(categoryName);
+    setIsDrawerOpen(true);
+    setAddingWidgetCategory(categoryName);
   };
 
   const filteredWidgets = searchTerm
@@ -74,6 +83,29 @@ function Dashboard() {
       }))
     : data.categories;
 
+  const getChartDataFromContent = (content) => {
+    const totalMatch = content.match(/(\d+) Total/);
+    const failedMatch = content.match(/Failed \((\d+)\)/);
+    const warningMatch = content.match(/Warning \((\d+)\)/);
+    const notAvailableMatch = content.match(/Not available \((\d+)\)/);
+    const passedMatch = content.match(/Passed \((\d+)\)/);
+
+    if (totalMatch && failedMatch && warningMatch && notAvailableMatch && passedMatch) {
+      const total = parseInt(totalMatch[1]);
+      const failed = parseInt(failedMatch[1]);
+      const warning = parseInt(warningMatch[1]);
+      const notAvailable = parseInt(notAvailableMatch[1]);
+      const passed = parseInt(passedMatch[1]);
+
+      return {
+        total,
+        dataValues: [failed, warning, notAvailable, passed],
+      };
+    }
+
+    return null;
+  };
+
   return (
     <div className="dashboard">
       <input
@@ -82,49 +114,89 @@ function Dashboard() {
         value={searchTerm}
         onChange={e => setSearchTerm(e.target.value)}
       />
-      <button onClick={() => setAddingWidget(true)}>+ Add Widget</button>
+      <button onClick={() => setIsDrawerOpen(true)}>+ Add Widget</button>
 
-      {filteredWidgets.map((category, index) => (
+      {data.categories.map((category, index) => (
         <div key={index} className="category">
-          <h2>{category.name}</h2>
+          <h2 style={{ margin: '5px 0' }}>{category.name}</h2>
           <div className="widgets">
             {category.widgets.map(widget => (
-              <div key={widget.id} className="widget">
-                <h3>{widget.name}</h3>
-                <p>{widget.content}</p>
-                <button onClick={() => removeWidget(category.name, widget.id)}>Remove Widget</button>
+              <div key={widget.id} className="widget" style={{ position: 'relative' }}>
+                <h3 style={{ position: 'absolute', top: '0', left: '0', margin: '0', padding: '10px' }}>{widget.name}</h3>
+                {widget.id === 1 && (
+                  <DonutChart
+                    dataValues={[2, 2]}
+                    total={2}
+                    labels={['Connected', 'Not Connected']}
+                    backgroundColors={['#C0C0C0', '#1986b3']}
+                  />
+                )}
+                {widget.id === 2 && (
+                  <DonutChart
+                    dataValues={[7253, 36, 681, 1689]}
+                    total={9659}
+                    labels={['Failed', 'Warning', 'Not Available', 'Passed']}
+                    backgroundColors={['#206308', '#e3eddf', '#eded09', '#ed1c09']}
+                  />
+                )}
+                {widget.id === 5 && (
+                  <div>
+                    <ProgressBar
+                      total={1470}
+                      data={[
+                        { label: 'Critical', value: 9, color: '#B22222' },
+                        { label: 'High', value: 735, color: '#FF6347' },
+                      ]}
+                    />
+                    <p>{widget.content}</p>
+                  </div>
+                )}
+                {widget.id === 6 && (
+                  <div>
+                    <ProgressBar
+                      total={2}
+                      data={[
+                        { label: 'Critical', value: 2, color: '#B22222' },
+                        { label: 'High', value: 2, color: '#FFA500' },
+                      ]}
+                    />
+                    <p>{widget.content}</p>
+                  </div>
+                )}
+                {(widget.id === 3 || widget.id === 4) && (
+                  <div>
+                  <img src={myImage} alt='Description' 
+                   style={{ width: '20%', marginBottom: '0px' }} />
+                  <p>{widget.content}</p>
+                </div>
+                )}
               </div>
             ))}
+            {/* Add Widget Box */}
+            <div className="widget add-widget" onClick={() => handleAddWidgetClick(category.name)} style={addWidgetBoxStyle}>
+              <p>+ Add Widget</p>
+            </div>
           </div>
         </div>
       ))}
 
-      {addingWidget && (
-        <div className="add-widget-form">
-          <h3>Add New Widget</h3>
-          <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
-            <option value="">Select Category</option>
-            {data.categories.map((category, index) => (
-              <option key={index} value={category.name}>{category.name}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Widget Name"
-            value={newWidget.name}
-            onChange={e => setNewWidget({ ...newWidget, name: e.target.value })}
-          />
-          <textarea
-            placeholder="Widget Content"
-            value={newWidget.content}
-            onChange={e => setNewWidget({ ...newWidget, content: e.target.value })}
-          />
-          <button onClick={addWidget}>Add Widget</button>
-          <button onClick={() => setAddingWidget(false)}>Cancel</button>
-        </div>
-      )}
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={handleCancelClick}
+        onConfirm={handleConfirmClick}
+      />
     </div>
   );
 }
+
+// Style for the Add Widget box
+const addWidgetBoxStyle = {
+  border: '1px solid #ccc',
+  padding: '20px',
+  width: '100px',
+  textAlign: 'center',
+  cursor: 'pointer',
+  backgroundColor: '#f0f0f0',
+};
 
 export default Dashboard;
