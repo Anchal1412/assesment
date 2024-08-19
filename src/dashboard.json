@@ -1,0 +1,37 @@
+{
+    "categories": [
+      {
+        "id": 1,
+        "name": "CSPM Executive Dashboard",
+        "widgets": [
+          {
+            "id": 1,
+            "name": "Cloud Accounts",
+            "text": "Connected: 2, Not Connected: 2"
+          },
+          {
+            "id": 2,
+            "name": "Cloud Account Risk Assessment",
+            "text": "Failed: 1887, Warning: 689, Passed: 7251"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "CWPP Dashboard",
+        "widgets": [
+          {
+            "id": 3,
+            "name": "Top 5 Namespace Specific Alerts",
+            "text": "No data available"
+          },
+          {
+            "id": 4,
+            "name": "Registry Scan",
+            "text": "1470 image vulnerabilities"
+          }
+        ]
+      }
+    ]
+  }
+  
